@@ -1,0 +1,2 @@
+For example in CMD, locate the "...\WebInterfaces\Server" folder and run node server.js
+Then open your browser and go to http://localhost:3000/

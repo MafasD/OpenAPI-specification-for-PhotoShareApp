@@ -1,0 +1,478 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PhotoShareApp-API",
+    "version": "1.0.0",
+    "description": "This is an example API for the PhotoShareApp, it doesn't actually work with the PhotoShareApp/Firebase currently, since the REST API is not implemented."
+  },
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Operations regarding posts"
+    },
+    {
+      "name": "User",
+      "description": "Operations regarding users"
+    }
+  ],
+  "paths": {
+    "/posts": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Get all posts",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "1",
+                    "description": "Oulu river",
+                    "imageUri": "https://firebasestorage.com/randomuri1.jpg",
+                    "datePosted": "2023-09-30T20:20:20.123Z",
+                    "location": {
+                      "latitude": "65.1231",
+                      "longitude": "25.5521"
+                    },
+                    "posterId": "randomId",
+                    "posterName": "randomUser"
+                  },
+                  {
+                    "id": "2",
+                    "description": "Some flowers",
+                    "imageUri": "https://firebasestorage.com/randomuri2.jpg",
+                    "datePosted": "2023-09-25T20:22:07.507Z",
+                    "location": {
+                      "latitude": "65.1364",
+                      "longitude": "25.1462"
+                    },
+                    "posterId": "randomId2",
+                    "posterName": "randomUser2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Create a new post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPost"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "description",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageUri",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "3",
+                  "description": "A frozen Oulu river",
+                  "imageUri": "https://firebasestorage.com/randomuri3.jpg"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, all fields are required."
+          }
+        }
+      }
+    },
+    "/posts/{postId}": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Get a specific post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "description": "Oulu river",
+                  "imageUri": "https://firebasestorage.com/randomuri1.jpg"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "put": {  
+        "tags": [
+          "Post"
+        ],
+        "summary": "Edit a post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "new description",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "new imageUri",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPost"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post edited successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "description": "Updated post description",
+                  "imageUri": "https://example.com/newrandomuri.jpg"
+                }
+              }
+            }
+          },
+          "204": {  
+            "description": "No content, all fields are required"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "delete": {  
+        "tags": [
+          "Post"
+        ],
+        "summary": "Delete a post",
+        "parameters" : [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post deleted successfully"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "User"
+      ],
+        "summary": "Register new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "New user registered successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, all fields are required."
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Login successful",
+                  "token": "your-auth-token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong email or passsword"
+          }
+        }
+      }
+    },
+    "/users/{userId}/posts": {
+      "get": {
+        "tags": [
+          "Post",
+          "User"
+        ],
+        "summary": "Get posts by user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "2",
+                    "description": "Some flowers",
+                    "imageUri": "https://firebasestorage.com/randomuri2.jpg"
+                  },
+                  {
+                    "id": "3",
+                    "description": "A frozen Oulu river",
+                    "imageUri": "https://firebasestorage.com/randomuri3.jpg"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logout",
+        "description": "Log out the user.",
+        "responses": {
+          "204": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "description": "Unauthorized, no user is currently logged in."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewPost": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "imageUri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "imageUri"
+        ]
+      },
+      "EditPost": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "imageUri": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "password", "username"]
+      }
+    }
+  }
+}
